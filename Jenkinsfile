@@ -8,7 +8,7 @@ pipeline {
         steps {
             script {
                 sh "java --version"
-                sh "mvn --verion"
+                sh "mvn --version"
             }
         }
     }
