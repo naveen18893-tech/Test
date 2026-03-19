@@ -1,36 +1,50 @@
 package base;
 
+import org.testng.ITestContext;
+import org.testng.ITestListener;
+import org.testng.ITestResult;
 import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-import com.aventstack.extentreports.reporter.configuration.Theme;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 
-public class ExtentManager {
-    private static ExtentReports extent;
+public class TestListener implements ITestListener {
 
-    public static ExtentReports getInstance() {
-        if (extent == null) {
-            // Path for the HTML report
-            String reportPath = System.getProperty("user.dir") + "/target/ExtentReport.html";
+    private static ExtentReports extent = ExtentManager.getInstance();
+    private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
 
-            // Create Spark reporter
-            ExtentSparkReporter reporter = new ExtentSparkReporter(reportPath);
+    @Override
+    public void onTestStart(ITestResult result) {
+        ExtentTest extentTest = extent.createTest(result.getMethod().getMethodName());
+        test.set(extentTest);
+        test.get().log(Status.INFO, "Test Started 🟡"); // Yellow info at start
+    }
 
-            // Configure report style
-            reporter.config().setReportName("Automation Test Report"); // Report header
-            reporter.config().setDocumentTitle("Test Results");        // Browser tab title
-            reporter.config().setTheme(Theme.DARK);                    // Dark theme with better colors
-            reporter.config().setTimelineEnabled(true);               // Adds a timeline view
-            reporter.config().setEncoding("UTF-8");                   // Ensure correct encoding
+    @Override
+    public void onTestSuccess(ITestResult result) {
+        test.get().log(Status.PASS, "Test Passed ✅"); // Green with icon
+    }
 
-            // Initialize ExtentReports
-            extent = new ExtentReports();
-            extent.attachReporter(reporter);
+    @Override
+    public void onTestFailure(ITestResult result) {
+        test.get().log(Status.FAIL, "Test Failed ❌"); // Red with icon
+        test.get().log(Status.FAIL, result.getThrowable()); // Show exception stacktrace
+    }
 
-            // Optional: add system info for context in Jenkins builds
-            extent.setSystemInfo("OS", System.getProperty("os.name"));
-            extent.setSystemInfo("Java Version", System.getProperty("java.version"));
-            extent.setSystemInfo("Environment", "QA");
-        }
-        return extent;
+    @Override
+    public void onTestSkipped(ITestResult result) {
+        test.get().log(Status.SKIP, "Test Skipped ⚠️"); // Orange with icon
+    }
+
+    @Override
+    public void onStart(ITestContext context) {
+        // Optional: log suite start
+        extent.setSystemInfo("Environment", "QA");
+        extent.setSystemInfo("OS", System.getProperty("os.name"));
+        extent.setSystemInfo("Java Version", System.getProperty("java.version"));
+    }
+
+    @Override
+    public void onFinish(ITestContext context) {
+        extent.flush(); // Write everything to the report
     }
 }
