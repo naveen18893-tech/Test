@@ -4,6 +4,14 @@ pipeline {
         maven 'maven'
     }
     stages {
+    state ('test java version') {
+        step {
+            script {
+                sh "java --version"
+                sh "mvn --verion"
+            }
+        }
+    }
     stage ('test') {
             steps {
                 script {
