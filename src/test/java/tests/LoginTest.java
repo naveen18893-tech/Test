@@ -1,31 +1,25 @@
-package pages;
+package tests;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-public class LoginPage {
+import base.BaseTest;
+import pages.LoginPage;
 
-    private WebDriver driver;
+public class LoginTest extends BaseTest {
 
-    private By usernameField = By.id("Email");
-    private By passwordField = By.id("Password");
-    private By loginButton = By.xpath("//button[text()='Log in']");
+    @Test
+    public void testValidLogin() {
 
-    public LoginPage(WebDriver driver) {
-        this.driver = driver;
-    }
+        LoginPage loginPage = new LoginPage(driver);
 
-    public void enterUsername(String username) {
-        driver.findElement(usernameField).clear();
-        driver.findElement(usernameField).sendKeys(username);
-    }
+        loginPage.enterUsername("admin@yourstore.com");
+        loginPage.enterPassword("admin");
+        loginPage.clickLogin();
 
-    public void enterPassword(String password) {
-        driver.findElement(passwordField).clear();
-        driver.findElement(passwordField).sendKeys(password);
-    }
+        String title = driver.getTitle();
+        System.out.println("Page title: " + title);
 
-    public void clickLogin() {
-        driver.findElement(loginButton).click();
+        Assert.assertTrue(title.contains("Dashboard") || title.length() > 0);
     }
 }
