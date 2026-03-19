@@ -17,6 +17,7 @@ pipeline {
             steps {
                 script {
                     sh "mvn clean test"
+                    archiveArtifacts artifacts: 'target/ExtentReport.html', fingerprint: true
                 }
             }
         }
