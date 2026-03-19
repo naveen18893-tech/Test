@@ -5,7 +5,7 @@ pipeline {
     }
     stages {
     state ('test java version') {
-        step {
+        steps {
             script {
                 sh "java --version"
                 sh "mvn --verion"
