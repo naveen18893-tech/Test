@@ -1,0 +1,25 @@
+pipeline {
+    agent any 
+    tools {
+        jdk 'JDK17'
+        maven 'maven'
+    }
+    stages {
+    stage ('test java version') {
+        steps {
+            script {
+                sh "java --version"
+                sh "mvn --version"
+            }
+        }
+    }
+    stage ('test') {
+            steps {
+                script {
+                    sh "mvn clean test"
+                }
+            }
+        }
+    }
+
+}
