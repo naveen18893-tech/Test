@@ -29,7 +29,7 @@ post {
               reportDir: 'target',
               reportFiles: 'ExtentReport.html',
              reportName: 'Extent Report'
-         ]
+         ])
         }
        
     }
