@@ -1,11 +1,7 @@
 pipeline {
     agent any 
-    environment {
-        // Set your JDK 17 path
-        JAVA_HOME = '/usr/lib/jvm/java-17-amazon-corretto.x86_64'
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
-    }
     tools {
+        jdk 'JDK17'
         maven 'maven'
     }
     stages {
