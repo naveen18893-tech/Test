@@ -25,6 +25,12 @@ post {
         always {
             // Publish JUnit XML reports to Jenkins
             junit 'target/surefire-reports/*.xml'
+            publishHTML(target: [
+              reportDir: 'target',
+              reportFiles: 'ExtentReport.html',
+             reportName: 'Extent Report'
+         ]
         }
+       
     }
 }
